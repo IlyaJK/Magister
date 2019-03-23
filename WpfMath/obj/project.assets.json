@@ -1,0 +1,43 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETFramework,Version=v4.0": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    ".NETFramework,Version=v4.0": []
+  },
+  "packageFolders": {
+    "C:\\Users\\ilya9\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\ilya9\\OneDrive\\Рабочий стол\\Magister\\WpfMath\\WpfMath.csproj",
+      "projectName": "WpfMath",
+      "projectPath": "C:\\Users\\ilya9\\OneDrive\\Рабочий стол\\Magister\\WpfMath\\WpfMath.csproj",
+      "packagesPath": "C:\\Users\\ilya9\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ilya9\\OneDrive\\Рабочий стол\\Magister\\WpfMath\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\ilya9\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net40"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net40": {
+          "projectReferences": {}
+        }
+      }
+    },
+    "frameworks": {
+      "net40": {}
+    }
+  }
+}

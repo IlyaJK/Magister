@@ -2,11 +2,9 @@ C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\Consum
 C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\bin\Debug\ConsumerBehavior.exe
 C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\bin\Debug\ConsumerBehavior.pdb
 C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\obj\Debug\ConsumerBehavior.csprojAssemblyReference.cache
-C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\obj\Debug\MainWindow.g.cs
 C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\obj\Debug\App.g.cs
 C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\obj\Debug\ConsumerBehavior_MarkupCompile.cache
 C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\obj\Debug\ConsumerBehavior_MarkupCompile.lref
-C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\obj\Debug\MainWindow.baml
 C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\obj\Debug\ConsumerBehavior.g.resources
 C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\obj\Debug\ConsumerBehavior.Properties.Resources.resources
 C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\obj\Debug\ConsumerBehavior.csproj.GenerateResource.cache
@@ -42,3 +40,9 @@ C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\Consum
 C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\bin\Debug\tr\FSharp.Core.resources.dll
 C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\bin\Debug\zh-Hans\FSharp.Core.resources.dll
 C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\bin\Debug\zh-Hant\FSharp.Core.resources.dll
+C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\obj\Debug\Views\MainWindow.g.cs
+C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\obj\Debug\Views\MainWindow.baml
+C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\bin\Debug\Microsoft.Expression.Interactions.dll
+C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\bin\Debug\Microsoft.Expression.Interactions.xml
+C:\Users\ilya9\OneDrive\Рабочий стол\Magister\ConsumerBehavior\ConsumerBehavior\bin\Debug\System.Windows.Interactivity.xml

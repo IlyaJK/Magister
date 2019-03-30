@@ -22,3 +22,4 @@ C:\Users\ilya9\OneDrive\Рабочий стол\Magister\WpfMath\obj\Debug\net40
 C:\Users\ilya9\OneDrive\Рабочий стол\Magister\WpfMath\obj\Debug\net40\WpfMath.AssemblyInfo.cs
 C:\Users\ilya9\OneDrive\Рабочий стол\Magister\WpfMath\obj\Debug\net40\WpfMath.dll
 C:\Users\ilya9\OneDrive\Рабочий стол\Magister\WpfMath\obj\Debug\net40\WpfMath.pdb
+C:\Users\ilya9\OneDrive\Рабочий стол\Magister\WpfMath\obj\Debug\net40\WpfMath.csprojAssemblyReference.cache

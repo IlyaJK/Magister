@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsumerBehavior.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,23 @@ namespace ConsumerBehavior
     /// </summary>
     public partial class App : Application
     {
+        public DisplayRootRegistry displayRootRegistry = new DisplayRootRegistry();
+        MainWindowViewModel mainWindowViewModel;
+
+        public App()
+        {
+            displayRootRegistry.RegisterWindowType<MainWindowViewModel, MainWindow>();
+        }
+
+        protected override async void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            mainWindowViewModel = new MainWindowViewModel();
+
+            await displayRootRegistry.ShowModalPresentation(mainWindowViewModel);
+
+            Shutdown();
+        }
     }
 }

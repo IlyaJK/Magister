@@ -25,6 +25,8 @@ namespace ConsumerBehavior
     public partial class MainWindow : Window
     {
 
+       
+
         public string Diff(Expr a, Expr b)
         {
             return @"\frac{\partial " + a.VariableName + "}{" + b.VariableName + "}";

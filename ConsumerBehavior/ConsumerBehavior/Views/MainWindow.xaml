@@ -7,7 +7,7 @@
         xmlns:controls="clr-namespace:WpfMath.Controls;assembly=WpfMath"
         xmlns:local="clr-namespace:ConsumerBehavior"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="850">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction  Command="{Binding OnLoad}"/>
@@ -35,18 +35,26 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <TextBlock Text="Выберите функцию" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <ComboBox x:Name="combo" ItemsSource="{Binding Functions}" Margin="0 20 0 0" Width="150" Height="50" SelectedItem="{Binding SelectedFunction}" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <!-- <controls:FormulaControl x:Name="formula" Formula="{Binding Path=Source, NotifyOnValidationError=True}"
-                                         SelectionBrush="LightBlue"
-                                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SnapsToDevicePixels="True" />-->
-                    <Image Source="{Binding Source}" />
-                </DataTemplate>
-            </ComboBox.ItemTemplate> 
-            
-        </ComboBox>
-     
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <TextBlock Text="Выберите функцию" Width="150" Margin="-150 0 0 0" />
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <ComboBox x:Name="ComboBoxFunction" ItemsSource="{Binding Functions}" Margin="0 5 0 0" Width="150" SelectedItem="{Binding SelectedFunction}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction  Command="{Binding OnSelectionComboBoxFunction}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                                <Image Source="{Binding SourceFormula}" Margin="5 0 0 0" Visibility="{Binding IsVisibleFormula}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Image Source="{Binding SourceFormulaNear}" Margin="10 0 0 0" Width="140" />
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>

@@ -9,6 +9,10 @@ using System.Collections.Generic;
 using WpfMath;
 using System.Text;
 using WpfMath.Converters;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
+using System.Linq;
+using System.Windows.Controls;
 
 namespace ConsumerBehavior.ViewModels
 {
@@ -29,28 +33,67 @@ namespace ConsumerBehavior.ViewModels
             }
         }
 
+    
+
+        private BitmapSource _sourceFormulaNear;
+
+        public BitmapSource SourceFormulaNear
+        {
+            get { return _sourceFormulaNear; }
+            set
+            {
+                _sourceFormulaNear = value;
+                OnPropertyChanged(nameof(SourceFormulaNear));
+
+            }
+        }
+
+
+        private ICommand _onSelectionComboBoxFunction;
+
+        public ICommand OnSelectionComboBoxFunction
+        {
+            get
+            {
+                if (_onSelectionComboBoxFunction == null)
+                {
+                    _onSelectionComboBoxFunction = new RelayCommand(param =>
+                   {
+
+                       SelectedFunction.IsVisibleFormula = Visibility.Collapsed;
+                       SourceFormulaNear = SelectedFunction.SourceFormula;
+                   });
+                }
+                return _onSelectionComboBoxFunction;
+            }
+        }
+
 
         public MainWindowViewModel()
         {
             Functions = new ObservableCollection<Function>();
+          
             var names = new string[4] { "Аддитивная", "Логарифмическая", "Квадратичная", "Мультипликативная" };
-            foreach (var name in names)
+            var formulas = new string[4] { @"U_1(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})", @"U_2(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})",
+                @"U_3(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})", @"U_4(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})" };
+            foreach (var nameFormula in names.Zip(formulas, (n, f) => new string[2] { n, f }))
             {
-                string latex = @"\text{" + name + " — }" + @"U(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})";
-
+                
                 var parser = new TexFormulaParser();
-                var formula = parser.Parse(latex);
+                var formula = parser.Parse(nameFormula[1]);
                 //var renderer = formula.GetRenderer(TexStyle.Display, 15.0, "Arial");
                 //var geometry = renderer.RenderToGeometry(0, 0);
                 //var converter = new SVGConverter();
                 //var svgPathText = converter.ConvertGeometry(geometry);
                 //var svgText = AddSVGHeader(svgPathText);
-
+                
                 var renderer = formula.GetRenderer(TexStyle.Display, 15.0, "Arial");
                 var bitmapSource = renderer.RenderToBitmap(0.0, 0.0);
 
 
-                Functions.Add(new Function() { Name = name, Source = bitmapSource });
+
+
+                Functions.Add(new Function() { Name = nameFormula[0], SourceFormula = bitmapSource });
             }
             
         }

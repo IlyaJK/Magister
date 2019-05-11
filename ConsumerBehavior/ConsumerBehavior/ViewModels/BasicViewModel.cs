@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 namespace ConsumerBehavior.ViewModels {
 
-    class BasicViewModel {
+    class BasicViewModel : INotifyPropertyChanged
+    {
 
         protected bool SetProperty<T>(ref T field, T value, [CallerMemberName]string propertyName = null) {
             if (EqualityComparer<T>.Default.Equals(field, value))
@@ -15,8 +16,7 @@ namespace ConsumerBehavior.ViewModels {
         }
 
         public void OnPropertyChanged([CallerMemberName]string prop = "") {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

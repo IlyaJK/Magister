@@ -89,6 +89,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Command\LogariphmicCommand.cs" />
     <Compile Include="Command\RelayCommand.cs" />
     <Compile Include="DisplayRootRegistry.cs" />
     <Compile Include="ViewModels\Function.cs" />

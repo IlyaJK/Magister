@@ -1,24 +1,16 @@
-﻿using ConsumerBehavior;
-using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 //using ConsumerBehavior.Models;
 using ConsumerBehavior.Command;
-using System.Collections.Generic;
 using WpfMath;
-using System.Text;
-using WpfMath.Converters;
 using System.Windows.Media.Imaging;
-using System.Windows.Media;
 using System.Linq;
-using System.Windows.Controls;
 
 namespace ConsumerBehavior.ViewModels
 {
     class MainWindowViewModel : BasicViewModel
-    {
-       
+    { 
 
         private ObservableCollection<Function> _functions;
 
@@ -29,21 +21,6 @@ namespace ConsumerBehavior.ViewModels
             {
                 _functions = value;
                 OnPropertyChanged(nameof(Functions));
-
-            }
-        }
-
-    
-
-        private BitmapSource _sourceFormulaNear;
-
-        public BitmapSource SourceFormulaNear
-        {
-            get { return _sourceFormulaNear; }
-            set
-            {
-                _sourceFormulaNear = value;
-                OnPropertyChanged(nameof(SourceFormulaNear));
 
             }
         }
@@ -59,12 +36,29 @@ namespace ConsumerBehavior.ViewModels
                 {
                     _onSelectionComboBoxFunction = new RelayCommand(param =>
                    {
-
-                       SelectedFunction.IsVisibleFormula = Visibility.Collapsed;
-                       SourceFormulaNear = SelectedFunction.SourceFormula;
+                       IsVisibleUParams = Visibility.Visible;
+                       TextUParams = "";
                    });
                 }
                 return _onSelectionComboBoxFunction;
+            }
+        }
+
+        private ICommand _onClick;
+
+        public ICommand OnClick
+        {
+            get
+            {
+                if (_onClick == null)
+                {
+                    _onClick = new RelayCommand(param =>
+                    {
+                        var log = new LogariphmicCommand(this);
+                        log.Execute(null);
+                    });
+                }
+                return _onClick;
             }
         }
 
@@ -72,41 +66,25 @@ namespace ConsumerBehavior.ViewModels
         public MainWindowViewModel()
         {
             Functions = new ObservableCollection<Function>();
-          
+
             var names = new string[4] { "Аддитивная", "Логарифмическая", "Квадратичная", "Мультипликативная" };
-            var formulas = new string[4] { @"U_1(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})", @"U_2(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})",
-                @"U_3(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})", @"U_4(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})" };
-            foreach (var nameFormula in names.Zip(formulas, (n, f) => new string[2] { n, f }))
+            var formulas = new string[4] { @"U(x)=\sum_{j=1}^{n}\alpha_{j}x_{j}^{\beta_{j}}", @"U(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})",
+                @"U(x)=\sum_{j=1}^{n}\alpha_{j}x_{j}+\frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{n}b_{ij}x_{i}x_{j}",@"U(x)=a\prod_{j=1}^{n}x_{j}^{\alpha_{j}}"};
+            IsVisibleUParams = Visibility.Hidden;
+            foreach (var nameFormula in names.Zip(formulas, (n, f) => (name: n, formula: f)))
             {
-                
-                var parser = new TexFormulaParser();
-                var formula = parser.Parse(nameFormula[1]);
-                //var renderer = formula.GetRenderer(TexStyle.Display, 15.0, "Arial");
-                //var geometry = renderer.RenderToGeometry(0, 0);
-                //var converter = new SVGConverter();
-                //var svgPathText = converter.ConvertGeometry(geometry);
-                //var svgText = AddSVGHeader(svgPathText);
-                
-                var renderer = formula.GetRenderer(TexStyle.Display, 15.0, "Arial");
-                var bitmapSource = renderer.RenderToBitmap(0.0, 0.0);
-
-
-
-
-                Functions.Add(new Function() { Name = nameFormula[0], SourceFormula = bitmapSource });
+                Functions.Add(new Function() { Name = nameFormula.name, SourceFormula = RenderFormula(nameFormula.formula), IsVisibleFormula=Visibility.Visible });
             }
-            
+
         }
 
-        private string AddSVGHeader(string svgText)
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>")
-                .AppendLine("<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" >")
-                .AppendLine(svgText)
-                .AppendLine("</svg>");
 
-            return builder.ToString();
+        public BitmapSource RenderFormula(string data)
+        {
+            var parser = new TexFormulaParser();
+            var formula = parser.Parse(data);
+            var renderer = formula.GetRenderer(TexStyle.Display, 15.0, "Arial");
+            return renderer.RenderToBitmap(0.0, 0.0);
         }
 
         private Function _selectedFunction;
@@ -121,6 +99,8 @@ namespace ConsumerBehavior.ViewModels
             }
         }
 
+
+
         private string _caption = "Решение задачи оптимального поведения потребителя";
 
         public string Caption
@@ -132,6 +112,32 @@ namespace ConsumerBehavior.ViewModels
                 OnPropertyChanged(nameof(Caption));
             }
         }
+
+        private Visibility _isVisibleUParams;
+
+        public Visibility IsVisibleUParams
+        {
+            get { return _isVisibleUParams; }
+            set
+            {
+                _isVisibleUParams = value;
+                OnPropertyChanged(nameof(IsVisibleUParams));
+            }
+        }
+
+        private string _textUParams;
+
+        public string TextUParams
+        {
+            get { return _textUParams; }
+            set
+            {
+                _textUParams = value;
+                OnPropertyChanged(nameof(TextUParams));
+            }
+        }
+
+
 
 
         //private ICommand _onLoad;

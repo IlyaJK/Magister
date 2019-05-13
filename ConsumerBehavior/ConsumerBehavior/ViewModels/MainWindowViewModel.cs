@@ -25,6 +25,19 @@ namespace ConsumerBehavior.ViewModels
             }
         }
 
+        private Visibility _isVisibleParams = Visibility.Hidden;
+
+        public Visibility IsVisibleParams
+        {
+            get { return _isVisibleParams; }
+            set
+            {
+                _isVisibleParams = value;
+                OnPropertyChanged(nameof(IsVisibleParams));
+
+            }
+        }
+
 
         private ICommand _onSelectionComboBoxFunction;
 
@@ -36,29 +49,29 @@ namespace ConsumerBehavior.ViewModels
                 {
                     _onSelectionComboBoxFunction = new RelayCommand(param =>
                    {
-                       IsVisibleUParams = Visibility.Visible;
-                       TextUParams = "";
+                       IsVisibleParams = Visibility.Visible;
+                       
                    });
                 }
                 return _onSelectionComboBoxFunction;
             }
         }
 
-        private ICommand _onClick;
+        private ICommand _onClickSolve;
 
-        public ICommand OnClick
+        public ICommand OnClickSolve
         {
             get
             {
-                if (_onClick == null)
+                if (_onClickSolve == null)
                 {
-                    _onClick = new RelayCommand(param =>
+                    _onClickSolve = new RelayCommand(param =>
                     {
                         var log = new LogariphmicCommand(this);
                         log.Execute(null);
                     });
                 }
-                return _onClick;
+                return _onClickSolve;
             }
         }
 
@@ -70,10 +83,10 @@ namespace ConsumerBehavior.ViewModels
             var names = new string[4] { "Аддитивная", "Логарифмическая", "Квадратичная", "Мультипликативная" };
             var formulas = new string[4] { @"U(x)=\sum_{j=1}^{n}\alpha_{j}x_{j}^{\beta_{j}}", @"U(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})",
                 @"U(x)=\sum_{j=1}^{n}\alpha_{j}x_{j}+\frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{n}b_{ij}x_{i}x_{j}",@"U(x)=a\prod_{j=1}^{n}x_{j}^{\alpha_{j}}"};
-            IsVisibleUParams = Visibility.Hidden;
+            IsVisibleParams = Visibility.Hidden;
             foreach (var nameFormula in names.Zip(formulas, (n, f) => (name: n, formula: f)))
             {
-                Functions.Add(new Function() { Name = nameFormula.name, SourceFormula = RenderFormula(nameFormula.formula), IsVisibleFormula=Visibility.Visible });
+                Functions.Add(new Function() { Name = nameFormula.name, SourceFormula = RenderFormula(nameFormula.formula) });
             }
 
         }
@@ -113,17 +126,7 @@ namespace ConsumerBehavior.ViewModels
             }
         }
 
-        private Visibility _isVisibleUParams;
-
-        public Visibility IsVisibleUParams
-        {
-            get { return _isVisibleUParams; }
-            set
-            {
-                _isVisibleUParams = value;
-                OnPropertyChanged(nameof(IsVisibleUParams));
-            }
-        }
+    
 
         private string _textUParams;
 

@@ -27,14 +27,13 @@ namespace ConsumerBehavior.Command
 
         public void Execute(object parameter)
         {
-            string pat = @"(?:\s*(\d+(?:[.,]\d+)?)\s*[*]\s*ln\s*[(]\s*x\d+\s*[)]\s*(?:[+]\s*)?)+";
+            string pat = @"(\d+(?:[.,]\d+)?)[*]ln[(]x\d+[)]";
             var reg = new Regex(pat, RegexOptions.IgnoreCase);
             var matchs = reg.Matches(_mainWindowViewModel.TextUParams);
             foreach (var match in matchs)
             {
-
+                
             }
-
         }
     }
 }

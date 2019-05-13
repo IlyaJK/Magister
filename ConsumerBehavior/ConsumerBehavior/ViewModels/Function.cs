@@ -13,19 +13,6 @@ namespace ConsumerBehavior.ViewModels
         public string Name { get; set; }
         public BitmapSource SourceFormula { get; set; }
 
-        private Visibility _isVisibleFormula;
-
-        public Visibility IsVisibleFormula
-        {
-            get { return _isVisibleFormula; }
-            set
-            {
-                _isVisibleFormula = value;
-                OnPropertyChanged(nameof(IsVisibleFormula));
-
-            }
-        }
-
      
 
     }

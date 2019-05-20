@@ -9,13 +9,13 @@ using System.Text.RegularExpressions;
 
 namespace ConsumerBehavior.Command
 {
-    class LogariphmicCommand : ICommand
+    class AdditiveCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
 
         private MainWindowViewModel _mainWindowViewModel;
 
-        public LogariphmicCommand(MainWindowViewModel mainWindowViewModel)
+        public AdditiveCommand(MainWindowViewModel mainWindowViewModel)
         {
             _mainWindowViewModel = mainWindowViewModel;
         }
@@ -27,13 +27,7 @@ namespace ConsumerBehavior.Command
 
         public void Execute(object parameter)
         {
-            var pat = @"(\d+(?:[.,]\d+)?)[*]ln[(]x\d+[)]";
-            var reg = new Regex(pat, RegexOptions.IgnoreCase);
-            var matchs = reg.Matches(_mainWindowViewModel.UParams);
-            foreach (var match in matchs)
-            {
-                
-            }
+           
         }
     }
 }

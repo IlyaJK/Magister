@@ -27,6 +27,19 @@ namespace ConsumerBehavior.ViewModels
             }
         }
 
+        private ObservableCollection<Result> _resultCollection;
+
+        public ObservableCollection<Result> ResultCollection
+        {
+            get { return _resultCollection; }
+            set
+            {
+                _resultCollection = value;
+                OnPropertyChanged(nameof(ResultCollection));
+
+            }
+        }
+
         public MainWindowViewModel()
         {
             Functions = new ObservableCollection<Function>();
@@ -111,12 +124,9 @@ namespace ConsumerBehavior.ViewModels
                         {
                             errors += "Не соответствует кол-во параметров и введеных значений p\n";
                         }
-                        if (!string.IsNullOrEmpty(errors))
-                        {
-                            MessageBox.Show(errors, "Ошибки", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
+                      
                         
-                        //SelectedFunction.Func.Execute(errors);
+                        SelectedFunction.Func.Execute(errors);
                     });
                 }
                 return _onClickSolve;
@@ -211,6 +221,7 @@ namespace ConsumerBehavior.ViewModels
             }
         }
 
+      
 
 
         private string _caption = "Решение задачи оптимального поведения потребителя";
@@ -227,7 +238,7 @@ namespace ConsumerBehavior.ViewModels
 
        
 
-        private int _countParams;
+        private int _countParams = 2;
 
         public int CountParams
         {
@@ -240,7 +251,7 @@ namespace ConsumerBehavior.ViewModels
         }
 
 
-        private double _mParam;
+        private double _mParam = 100.0;
 
         public double MParam
         {
@@ -252,7 +263,7 @@ namespace ConsumerBehavior.ViewModels
             }
         }
 
-        private string _uParams;
+        private string _uParams = "1 * ln(x1) + 2.5 * ln(x2)";
 
         public string UParams
         {
@@ -291,7 +302,7 @@ namespace ConsumerBehavior.ViewModels
 
      
 
-        private string _pParams = "";
+        private string _pParams = "p1 = 1; p2 = 4.5";
 
         public string PParams
         {
@@ -305,7 +316,7 @@ namespace ConsumerBehavior.ViewModels
 
        
 
-        private string _fAQP = "Пример:\np1=1; p2=2.1; p3 = 3,14";
+        private string _fAQP = "Пример:\np1=1; p2=2.1; p3 = 3,14\nИндексы при p должны идти по возрастанию";
 
         public string FAQP
         {

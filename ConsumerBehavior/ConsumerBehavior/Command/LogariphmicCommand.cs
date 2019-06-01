@@ -15,15 +15,13 @@ namespace ConsumerBehavior.Command
     {
         public event EventHandler CanExecuteChanged;
 
-        private MainWindowViewModel _mainWindowViewModel;
+        private MainWindowViewModel _main;
 
         private double[] _alpha;
 
-        private string _result = "";
-
         public LogariphmicCommand(MainWindowViewModel mainWindowViewModel)
         {
-            _mainWindowViewModel = mainWindowViewModel;
+            _main = mainWindowViewModel;
         }
 
         public bool CanExecute(object parameter)
@@ -36,8 +34,8 @@ namespace ConsumerBehavior.Command
             var errors = (string)parameter;
             var pat = @"(\d+(?:[.,]\d+)?)[*]ln[(]x(\d+)[)]";
             var reg = new Regex(pat, RegexOptions.IgnoreCase);
-            var matchs = reg.Matches(_mainWindowViewModel.UParams.Replace(" ", ""));
-            if (matchs.Count == _mainWindowViewModel.CountParams && _mainWindowViewModel.CountParams > 0)
+            var matchs = reg.Matches(_main.UParams.Replace(" ", ""));
+            if (matchs.Count == _main.CountParams && _main.CountParams > 0)
             {
                 _alpha = new double[matchs.Count];
                 for (int i = 0; i < matchs.Count; i++)
@@ -70,43 +68,95 @@ namespace ConsumerBehavior.Command
 
         private void Algorithm()
         {
-            /* _result += "\\text{Дана функция полезности } U(";
-             for (int i = 1; i <= _mainWindowViewModel.CountParams; i++)
+            _main.ResultCollection = new ObservableCollection<Result>();
+            var result =_main.SetText("Дана функция полезности ") + "U(";
+             for (int i = 1; i <= _main.CountParams; i++)
              {
-                 if (i == _mainWindowViewModel.CountParams)
+                 if (i == _main.CountParams)
                  {
-                     _result += "x_{" + i + "}). ";
+                     result += "x_{" + i + "}). ";
                  }
                  else
                  {
-                     _result += "x_{" + i + "}, ";
+                     result += "x_{" + i + "}, ";
                  }
              }
-             _result += "\\text{ Требуется:}";
-             _result += "\\text{- решить}";*/
+             result += _main.SetText(" Требуется");
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(result) });
 
-            _result += "U = ";
-            string p = "";
-            for (int i = 1; i <= _mainWindowViewModel.CountParams; i++)
+             result =_main.SetText("- решить задачу оптимального поведения при заданных ценах ");
+
+            for (int i = 1; i <= _main.CountParams; i++)
             {
-                if (i == _mainWindowViewModel.CountParams)
+                result += "p_{" + i + "}";
+                if (i < _main.CountParams)
                 {
-                    _result += _alpha[i - 1] + "\\ln(x_{" + i + "});";
+                    result += ", ";
+                }
+            }
+
+            result += _main.SetText(" и доходе M.");
+
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(result) });
+
+            result = _main.SetText("- найти функцию опроса потребителя и вычислить реакции потребителя при изменении дохода и цен в точке ");
+
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(result) });
+
+            result = _main.SetText("оптимума.");
+
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(result) });
+
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("- вычислить предельные полезности товаров в точке оптимума.")) });
+
+            
+            result = _main.SetText("- вычислить норму замещения для ");
+            for (int i = 1; i <= _main.CountParams; i++)
+            {
+                result += _main.SetText(i + "-го");
+                if (i < _main.CountParams-1)
+                {
+                    result += ", ";
+                }
+                else if (i == _main.CountParams-1)
+                {
+                    result += _main.SetText(" и ");
+                }
+            }
+
+            result += _main.SetText(" товаров в точке оптимума.");
+
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(result) });
+
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("- вычислить коэффициенты эластичности по доходу и ценам для заданных цен и дохода.")) });
+
+            result = "U = ";
+            string p = "";
+            for (int i = 1; i <= _main.CountParams; i++)
+            {
+                if (i == _main.CountParams)
+                {
+                    result += _main.ToDotNumber(_alpha[i - 1]) + "\\ln(x_{" + i + "});";
                 }
                 else
                 {
-                    _result += _alpha[i - 1] + "\\ln(x_{" + i + "}) + ";
+                    result += _main.ToDotNumber(_alpha[i - 1]) + "\\ln(x_{" + i + "}) + ";
 
                 }
+                p += "p_{" + i + "} = " + _main.ToDotNumber(_main.PValuesParams[i - 1]);
+                if (i < _main.CountParams)
+                {
+                    p +=  "," + _main.SetText(" ");
+                }
                
-                p += "p_{" + i + "} = " + _mainWindowViewModel.PValuesParams[i - 1] + ", \\text{ }";
-            }
-            _mainWindowViewModel.ResultCollection = new ObservableCollection<Result>();
-            _mainWindowViewModel.ResultCollection.Add(new Result() { ItemResult = _mainWindowViewModel.RenderFormula(_result) });
-            p += "M = " + _mainWindowViewModel.MParam + ".";          
-            _mainWindowViewModel.ResultCollection.Add(new Result() { ItemResult = _mainWindowViewModel.RenderFormula(p) });
 
-            
+            }
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("отступ")), TopPadding=Visibility.Hidden} );
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(result), Align= HorizontalAlignment.Center});
+
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(p), Align = HorizontalAlignment.Center });
+
+
         }
     }
 }

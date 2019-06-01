@@ -43,7 +43,7 @@ namespace ConsumerBehavior.ViewModels
         public MainWindowViewModel()
         {
             Functions = new ObservableCollection<Function>();
-
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
             var names = new string[4] { "Аддитивная", "Логарифмическая", "Квадратичная", "Мультипликативная" };
             var formulas = new string[4] { @"U(x)=\sum_{j=1}^{n}\alpha_{j}x_{j}^{\beta_{j}}", @"U(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})",
                 @"U(x)=\sum_{j=1}^{n}\alpha_{j}x_{j}+\frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{n}b_{ij}x_{i}x_{j}",@"U(x)=a\prod_{j=1}^{n}x_{j}^{\alpha_{j}}"};
@@ -206,6 +206,7 @@ namespace ConsumerBehavior.ViewModels
             var parser = new TexFormulaParser();
             var formula = parser.Parse(data);
             var renderer = formula.GetRenderer(TexStyle.Display, 15.0, "Arial");
+            
             return renderer.RenderToBitmap(0.0, 0.0);
         }
 
@@ -220,8 +221,13 @@ namespace ConsumerBehavior.ViewModels
                 OnPropertyChanged(nameof(SelectedFunction));
             }
         }
+        
 
-      
+
+        public string SetText(string text)
+        {
+            return "\\text{" + text + "}";
+        }
 
 
         private string _caption = "Решение задачи оптимального поведения потребителя";
@@ -339,6 +345,11 @@ namespace ConsumerBehavior.ViewModels
                 OnPropertyChanged(nameof(IsVisibleFAQP));
 
             }
+        }
+
+        public string ToDotNumber(double number)
+        {
+            return number.ToString(System.Globalization.CultureInfo.GetCultureInfo("en-US"));
         }
        
     }

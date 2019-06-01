@@ -75,11 +75,11 @@
         <Button Content="?" TabIndex="6" Command="{Binding OnClickFAQP}" Visibility="{Binding IsVisibleParams}" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" Width="20" MaxWidth="20" Height="20" MaxHeight="20" Margin="20 0 0 0"/>
         <TextBlock Text="{Binding FAQP}" Visibility="{Binding IsVisibleFAQP, FallbackValue=Hidden}" TextWrapping="Wrap"  Width="200" Height="50" Margin="40,-70,0,0" Background="Gray" Grid.Row="2" Grid.Column="2"/>
         <Button Command="{Binding OnClickSolve}" TabIndex="7" Height="32" Visibility="{Binding IsVisibleParams}" Grid.Column="4" Grid.Row="2" Content="Решить" Width="100"/>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="3" Grid.RowSpan="5" Grid.ColumnSpan="5" Visibility="{Binding IsVisibleParams}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="3" Grid.RowSpan="5" Grid.ColumnSpan="5" Visibility="{Binding IsVisibleParams}" HorizontalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding ResultCollection, Mode=OneWay}" >
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Image Source="{Binding ItemResult}" Stretch="None"/>
+                        <Image Source="{Binding ItemResult}" Stretch="None" Visibility="{Binding TopPadding, FallbackValue=Visible}" HorizontalAlignment="{Binding Align, FallbackValue=Left}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

@@ -40,6 +40,8 @@ namespace ConsumerBehavior.ViewModels
             }
         }
 
+        public Result RedLine { get; private set; }
+
         public MainWindowViewModel()
         {
             Functions = new ObservableCollection<Function>();
@@ -53,6 +55,71 @@ namespace ConsumerBehavior.ViewModels
             {
                 Functions.Add(new Function() { Name = names[i], SourceFormula = RenderFormula(formulas[i]), Func = funcs[i] });
             }
+            RedLine = new Result() { ItemResult = RenderFormula(SetText("абзац")), TopPadding = Visibility.Hidden };
+        }
+
+        public void Header()
+        {
+            ResultCollection = new ObservableCollection<Result>();
+            var result = SetText("Дана функция полезности ", true) + "U(";
+            for (int i = 1; i <= CountParams; i++)
+            {
+                if (i == CountParams)
+                {
+                    result += "x_{" + i + "}). ";
+                }
+                else
+                {
+                    result += "x_{" + i + "}, ";
+                }
+            }
+            result += SetText(" Требуется:");
+            ResultCollection.Add(new Result() { ItemResult = RenderFormula(result) });
+
+            result = SetText("- решить задачу оптимального поведения при заданных ценах ", true);
+
+            for (int i = 1; i <= CountParams; i++)
+            {
+                result += "p_{" + i + "}";
+                if (i < CountParams)
+                {
+                    result += ", ";
+                }
+            }
+
+            result += SetText(" и доходе M.");
+
+            ResultCollection.Add(new Result() { ItemResult = RenderFormula(result) });
+
+            result = SetText("- найти функцию опроса потребителя и вычислить реакции потребителя при изменении дохода и цен в точке ", true);
+
+            ResultCollection.Add(new Result() { ItemResult = RenderFormula(result) });
+
+            result = SetText("оптимума.");
+
+            ResultCollection.Add(new Result() { ItemResult = RenderFormula(result) });
+
+            ResultCollection.Add(new Result() { ItemResult = RenderFormula(SetText("- вычислить предельные полезности товаров в точке оптимума.", true)) });
+
+
+            result = SetText("- вычислить норму замещения для ", true);
+            for (int i = 1; i <= CountParams; i++)
+            {
+                result += SetText(i + "-го");
+                if (i < CountParams - 1)
+                {
+                    result += ", ";
+                }
+                else if (i == CountParams - 1)
+                {
+                    result += SetText(" и ");
+                }
+            }
+
+            result += SetText(" товаров в точке оптимума.");
+
+            ResultCollection.Add(new Result() { ItemResult = RenderFormula(result) });
+            ResultCollection.Add(new Result() { ItemResult = RenderFormula(SetText("- вычислить коэффициенты эластичности по доходу и ценам для заданных цен и дохода.", true)) });
 
         }
 
@@ -224,9 +291,9 @@ namespace ConsumerBehavior.ViewModels
         
 
 
-        public string SetText(string text)
+        public string SetText(string text, bool isTab=false)
         {
-            return "\\text{" + text + "}";
+            return "\\text{"+ (isTab ? "     ": "") + text + "}";
         }
 
 

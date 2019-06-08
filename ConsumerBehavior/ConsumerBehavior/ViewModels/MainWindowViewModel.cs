@@ -8,11 +8,13 @@ using System.Windows.Media.Imaging;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using MathNet.Symbolics;
+using Expr = MathNet.Symbolics.SymbolicExpression;
 
 namespace ConsumerBehavior.ViewModels
 {
     class MainWindowViewModel : BasicViewModel
-    { 
+    {
 
         private ObservableCollection<Function> _functions;
 
@@ -56,6 +58,23 @@ namespace ConsumerBehavior.ViewModels
                 Functions.Add(new Function() { Name = names[i], SourceFormula = RenderFormula(formulas[i]), Func = funcs[i] });
             }
             RedLine = new Result() { ItemResult = RenderFormula(SetText("абзац")), TopPadding = Visibility.Hidden };
+        }
+
+        public Expr Diff(string expr, string var)
+        {
+            return Expr.Parse(expr).Differentiate(Expr.Parse(var));
+        }
+
+        public string ReplaceVariablesToLatex(string input, string[] variables)
+        {
+            for (int i = 1; i <= CountParams; i++)
+            {
+                for (int j = 0; j < variables.Length; j++)
+                {
+                    input = input.Replace(variables[j] + i, @"\" + variables[j] + "_{" + i + "}");
+                }
+            }
+            return input;
         }
 
         public void Header()
@@ -164,17 +183,17 @@ namespace ConsumerBehavior.ViewModels
                         {
                             errors += "Параметр M должен быть больше 0\n";
                         }
-                                             
+
                         var pat = @"p(\d+)=([-]?\d+(?:[.,]\d+)?)[;]?";
                         var reg = new Regex(pat, RegexOptions.IgnoreCase);
                         var matchs = reg.Matches(PParams.Replace(" ", ""));
 
                         if (matchs.Count == CountParams && CountParams > 0)
-                        {                           
+                        {
                             PValuesParams = new double[CountParams];
                             for (int i = 0; i < matchs.Count; i++)
                             {
-                                if(int.Parse(matchs[i].Groups[1].Value) != i+1)
+                                if (int.Parse(matchs[i].Groups[1].Value) != i + 1)
                                 {
                                     errors += "Неправильный индекс p\n";
                                     break;
@@ -191,8 +210,8 @@ namespace ConsumerBehavior.ViewModels
                         {
                             errors += "Не соответствует кол-во параметров и введеных значений p\n";
                         }
-                      
-                        
+
+
                         SelectedFunction.Func.Execute(errors);
                     });
                 }
@@ -273,7 +292,7 @@ namespace ConsumerBehavior.ViewModels
             var parser = new TexFormulaParser();
             var formula = parser.Parse(data);
             var renderer = formula.GetRenderer(TexStyle.Display, 15.0, "Arial");
-            
+
             return renderer.RenderToBitmap(0.0, 0.0);
         }
 
@@ -288,12 +307,12 @@ namespace ConsumerBehavior.ViewModels
                 OnPropertyChanged(nameof(SelectedFunction));
             }
         }
-        
 
 
-        public string SetText(string text, bool isTab=false)
+
+        public string SetText(string text, bool isTab = false)
         {
-            return "\\text{"+ (isTab ? "     ": "") + text + "}";
+            return "\\text{" + (isTab ? "     " : "") + text + "}";
         }
 
 
@@ -309,7 +328,7 @@ namespace ConsumerBehavior.ViewModels
             }
         }
 
-       
+
 
         private int _countParams = 2;
 
@@ -373,7 +392,7 @@ namespace ConsumerBehavior.ViewModels
             }
         }
 
-     
+
 
         private string _pParams = "p1 = 1; p2 = 4.5";
 
@@ -387,7 +406,7 @@ namespace ConsumerBehavior.ViewModels
             }
         }
 
-       
+
 
         private string _fAQP = "Пример:\np1=1; p2=2.1; p3 = 3,14\nИндексы при p должны идти по возрастанию";
 
@@ -418,7 +437,7 @@ namespace ConsumerBehavior.ViewModels
         {
             return number.ToString(System.Globalization.CultureInfo.GetCultureInfo("en-US"));
         }
-       
+
     }
 
 

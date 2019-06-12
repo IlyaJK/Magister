@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using MathNet.Symbolics;
 using Expr = MathNet.Symbolics.SymbolicExpression;
+using ExprLast = MathNet.Symbolics.Expression;
 
 namespace ConsumerBehavior.ViewModels
 {
@@ -60,9 +61,35 @@ namespace ConsumerBehavior.ViewModels
             RedLine = new Result() { ItemResult = RenderFormula(SetText("абзац")), TopPadding = Visibility.Hidden };
         }
 
+        public Expr FindRoot(ExprLast variable, ExprLast expr)
+        {
+
+            ExprLast simple = Algebraic.Expand(Rational.Numerator(Rational.Simplify(variable, expr)));
+
+
+            ExprLast[] coeff = Polynomial.Coefficients(variable, simple);
+            switch (coeff.Length)
+            {
+                case 1: return ExprLast.Zero.Equals(coeff[0]) ? variable : ExprLast.Undefined;
+                case 2: return Rational.Simplify(variable, Algebraic.Expand(-coeff[0] / coeff[1]));
+                default: return ExprLast.Undefined;
+            }
+        }
+
+        public ExprLast ConvertExprToExprLast(Expr eq)
+        {
+            return Infix.ParseOrThrow(eq.ToString());
+        }
+
+        public Expr ConvertExprLastToExpr(ExprLast eq)
+        {
+            return eq;
+        }
+
         public Expr Diff(string expr, string var)
         {
             return Expr.Parse(expr).Differentiate(Expr.Parse(var));
+           
         }
 
         public string ReplaceVariablesToLatex(string input, string[] variables)
@@ -139,6 +166,7 @@ namespace ConsumerBehavior.ViewModels
 
             ResultCollection.Add(new Result() { ItemResult = RenderFormula(result) });
             ResultCollection.Add(new Result() { ItemResult = RenderFormula(SetText("- вычислить коэффициенты эластичности по доходу и ценам для заданных цен и дохода.", true)) });
+
 
         }
 

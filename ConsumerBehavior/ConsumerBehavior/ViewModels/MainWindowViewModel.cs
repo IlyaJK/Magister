@@ -43,6 +43,21 @@ namespace ConsumerBehavior.ViewModels
             }
         }
 
+        public string ConvertCommaToDot<T>(T param)
+        {
+            return param.ToString().Replace(",", ".");
+        }
+
+        public string ConvertDotToComma<T>(T param)
+        {
+            return param.ToString().Replace(".", ",");
+        }
+
+        public string ConvertToDot<T>(T param)
+        {
+            return param.ToString().Replace(",", ".");
+        }
+
         public Result RedLine { get; private set; }
 
         public MainWindowViewModel()

@@ -437,6 +437,25 @@ namespace ConsumerBehavior.Command
 
             _main.ResultCollection.Add(_main.RedLine);
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Решение4:", true)) });
+            
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Вычислим нормы замещения благ в точке оптимума ", true) + "\\overline{X}^*.") });
+
+            for (int i = 0; i < _main.CountParams; i++)
+            {
+               
+                for (int j = 0; j < _main.CountParams; j++)
+                {
+                    if (i == j)
+                        continue;
+                    var res = _main.ConvertCommaToDot((-dU_x_star[i] / dU_x_star[j]).ToString());
+                    _main.ResultCollection.Add(_main.RedLine);
+                    _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Норма замены " + (i+1)+"-го блага " + (j+1) + "-м:", true)) });
+                    _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"n_{" + (j+1)+"," + (i + 1) + @"} = -\frac{\partial U}{\partial x_" + (i + 1) + @"} : \frac{\partial U}{\partial x_" + (j + 1) + "} = " + res) });
+                    _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Для замещения 1 единицы " + (i+1) + "-го блага необходимо дополнительно приобрести ", true) + res) });
+                    _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText(" единиц " + (j + 1) + "-го блага, чтобы удовлетворенность осталась на прежнем уровне.")) });
+                }
+            }
+           
         }
 
     }

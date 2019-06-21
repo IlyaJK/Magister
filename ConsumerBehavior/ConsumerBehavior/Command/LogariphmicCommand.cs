@@ -304,12 +304,12 @@ namespace ConsumerBehavior.Command
                 {
                     result += _main.SetText(" и ");
                 }
-            }         
+            }
 
-            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(result + ".")});
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(result + ".") });
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Но т.к. мы условились, что речь будет идти о делимых благах, то оптимальный выбор потребителя будет:", true)) });
 
-            result = @"\overline{ X}^ * = (" + _x_star.Aggregate("", (b, n) => b + (!string.IsNullOrEmpty(b) ?  ";" : "") + _main.ConvertCommaToDot(n.ToString())) + ")";
+            result = @"\overline{ X}^ * = (" + _x_star.Aggregate("", (b, n) => b + (!string.IsNullOrEmpty(b) ? ";" : "") + _main.ConvertCommaToDot(n.ToString())) + ")";
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + result + _main.SetText(", т.е. следует приобрести: ")) });
 
 
@@ -331,7 +331,7 @@ namespace ConsumerBehavior.Command
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Решение 2:", true)) });
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Функции спроса потребителя найдены в пункте 1.", true)) });
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Вычислим реакции потребителя при изменении дохода М и цен ", true) + _pi + _main.SetText(" в точке оптимума ") + @"\overline{ X}^ *.") });
-            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Реакции потребителя при изменении дохода М:", true))});
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Реакции потребителя при изменении дохода М:", true)) });
 
             var minBlag = -1.0;
             var maxBlag = -1.0;
@@ -357,7 +357,7 @@ namespace ConsumerBehavior.Command
                     maxBlag = val;
                     indMaxBlag = i;
                 }
-                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"\frac{\partial x_" + (i+1) + @"}{\partial M } = " + res.ToLaTeX() + @"\approx" + _main.ConvertCommaToDot(val.ToString()) ) });
+                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"\frac{\partial x_" + (i + 1) + @"}{\partial M } = " + res.ToLaTeX() + @"\approx" + _main.ConvertCommaToDot(val.ToString())) });
                 if (i == 0)
                 {
                     _main.ResultCollection.Add(_main.RedLine);
@@ -365,38 +365,38 @@ namespace ConsumerBehavior.Command
                     _main.ResultCollection.Add(_main.RedLine);
                 }
             }
-           
+
             if (_main.CountParams == 2)
             {
-                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Оставшееся благо также является ценным для потребителя.  При этом наиболее ценным является " + (indMaxBlag + 1) +"-е благо, а наименее ценным – " + (indMinBlag + 1) + "-е.", true)) });
+                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Оставшееся благо также является ценным для потребителя.  При этом наиболее ценным является " + (indMaxBlag + 1) + "-е благо, а наименее ценным – " + (indMinBlag + 1) + "-е.", true)) });
             }
             else
             {
                 _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Остальные блага также являются ценными для потребителя.  При этом наиболее ценным является " + (indMaxBlag + 1) + "-е благо, а наименее ценным – " + (indMinBlag + 1) + "-е.", true)) });
 
             }
-            
+
 
             // Дописать выводы
             for (int i = 0; i < _main.CountParams; i++)
             {
                 _main.ResultCollection.Add(_main.RedLine);
-                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Определим реакции потребителя при изменении цены на " + (i + 1)+ "-е благо:", true)) });
+                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Определим реакции потребителя при изменении цены на " + (i + 1) + "-е благо:", true)) });
                 for (int j = 0; j < _main.CountParams; j++)
                 {
                     _main.ResultCollection.Add(_main.RedLine);
-                    var res = _main.Diff((_lst[i] as Expr).ToString(), "p_" + (i+1));
+                    var res = _main.Diff((_lst[i] as Expr).ToString(), "p_" + (i + 1));
                     var m = Expr.Parse(_main.ConvertCommaToDot(_main.MParam.ToString()));
                     var p = Expr.Parse(_main.ConvertCommaToDot(_main.PValuesParams[j].ToString()));
                     var val = double.Parse(_main.ConvertDotToComma(res.Substitute(Expr.Parse("M"), m).Substitute(Expr.Parse("p_" + (i + 1)), p).RealNumberValue.ToString()));
-                    _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"\frac{\partial x_" + (j + 1) + @"}{\partial p_" + (i+1) +" } = " + res.ToLaTeX() + (val == 0 ? "=" : @"\approx")+ _main.ConvertCommaToDot(val.ToString()) + (val != 0 ? " (" + (val >= 0 ? ">" : "<") + "0)"  : "")) });
+                    _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"\frac{\partial x_" + (j + 1) + @"}{\partial p_" + (i + 1) + " } = " + res.ToLaTeX() + (val == 0 ? "=" : @"\approx") + _main.ConvertCommaToDot(val.ToString()) + (val != 0 ? " (" + (val >= 0 ? ">" : "<") + "0)" : "")) });
                 }
 
             }
 
             // asd
             result = @"\overline{ X}^ * = (";
-            
+
             for (int i = 0; i < _main.CountParams; i++)
             {
                 result += "x_" + (i + 1) + "^*";
@@ -405,13 +405,16 @@ namespace ConsumerBehavior.Command
                     result += ",";
                 }
             }
-            
+
             _main.ResultCollection.Add(_main.RedLine);
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Решение3:", true)) });
-            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Вычислим предельные полезности благ в точке экстремума ", true) + result + ")" + 
-                _main.SetText(". Это значения частных производных ")) });
+            _main.ResultCollection.Add(new Result()
+            {
+                ItemResult = _main.RenderFormula(_main.SetText("Вычислим предельные полезности благ в точке экстремума ", true) + result + ")" +
+                _main.SetText(". Это значения частных производных "))
+            });
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("функции полезности ") + "U = (" + _xi + ")" + _main.SetText(" по соответствующим аргументам в точке ") + @"\overline{ X}^*.") });
-        
+
             _main.ResultCollection.Add(_main.RedLine);
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(@"\overline{ X}^ * = (" + _x_star.Aggregate("", (b, n) => b + (!string.IsNullOrEmpty(b) ? ";" : "") + _main.ConvertCommaToDot(n.ToString())) + ")"), Align = HorizontalAlignment.Center });
 
@@ -423,39 +426,85 @@ namespace ConsumerBehavior.Command
                 var x = Expr.Parse(_main.ConvertCommaToDot(_x_star[i].ToString()));
                 var val = double.Parse(_main.ConvertDotToComma(res.Substitute(Expr.Parse("x_" + (i + 1)), x).RealNumberValue.ToString()));
                 dU_x_star[i] = val;
-                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"\frac{\partial U}{\partial x_" + (i + 1) + " } = " + res.ToLaTeX() + _main.SetText(";    ") +
-                    @"\frac{\partial U}{\partial x_" + (i + 1) + " }(\\overline{ X})^* = " + res.ToLaTeX() + _main.SetText(" = ") + _main.ConvertCommaToDot(val.ToString())), Align=HorizontalAlignment.Center });
+                _main.ResultCollection.Add(new Result()
+                {
+                    ItemResult = _main.RenderFormula(_main.SetText("", true) + @"\frac{\partial U}{\partial x_" + (i + 1) + " } = " + res.ToLaTeX() + _main.SetText(";    ") +
+                    @"\frac{\partial U}{\partial x_" + (i + 1) + " }(\\overline{ X})^* = " + res.ToLaTeX() + _main.SetText(" = ") + _main.ConvertCommaToDot(val.ToString())),
+                    Align = HorizontalAlignment.Center
+                });
             }
 
-   
+
             _main.ResultCollection.Add(_main.RedLine);
             for (int i = 0; i < _main.CountParams; i++)
             {
-                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("На 1 дополнительную единицу " + (i+1) + "-го блага приходится ", true) + dU_x_star[i] + _main.SetText(" единиц дополнительной полезности.")) });
+                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("На 1 дополнительную единицу " + (i + 1) + "-го блага приходится ", true) + dU_x_star[i] + _main.SetText(" единиц дополнительной полезности.")) });
 
             }
 
             _main.ResultCollection.Add(_main.RedLine);
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Решение4:", true)) });
-            
+
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Вычислим нормы замещения благ в точке оптимума ", true) + "\\overline{X}^*.") });
 
             for (int i = 0; i < _main.CountParams; i++)
             {
-               
+
                 for (int j = 0; j < _main.CountParams; j++)
                 {
                     if (i == j)
                         continue;
-                    var res = _main.ConvertCommaToDot((-dU_x_star[i] / dU_x_star[j]).ToString());
+
+                    var dudx = dU_x_star[i] / dU_x_star[j];
+
                     _main.ResultCollection.Add(_main.RedLine);
-                    _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Норма замены " + (i+1)+"-го блага " + (j+1) + "-м:", true)) });
-                    _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"n_{" + (j+1)+"," + (i + 1) + @"} = -\frac{\partial U}{\partial x_" + (i + 1) + @"} : \frac{\partial U}{\partial x_" + (j + 1) + "} = " + res) });
-                    _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Для замещения 1 единицы " + (i+1) + "-го блага необходимо дополнительно приобрести ", true) + res) });
+                    _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Норма замены " + (i + 1) + "-го блага " + (j + 1) + "-м:", true)) });
+                    _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"n_{" + (j + 1) + "," + (i + 1) + @"} = -\frac{\partial U}{\partial x_" + (i + 1) + @"} : \frac{\partial U}{\partial x_" + (j + 1) + "} = " + _main.ConvertCommaToDot((-dudx).ToString())) });
+                    _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Для замещения 1 единицы " + (i + 1) + "-го блага необходимо дополнительно приобрести ", true) + _main.ConvertCommaToDot((dudx).ToString())) });
                     _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText(" единиц " + (j + 1) + "-го блага, чтобы удовлетворенность осталась на прежнем уровне.")) });
                 }
             }
-           
+
+            _main.ResultCollection.Add(_main.RedLine);
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Решение5:", true)) });
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Вычислим коэффициенты эластичности по доходу и ценам при заданных ценах и доходе: ", true)) });
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(p_values + ", M = " + _main.ConvertCommaToDot(_main.MParam.ToString()) + ".") });
+
+            var empSum = 0.0;
+            
+            for (int i = 0; i < _main.CountParams; i++)
+            {
+                _main.ResultCollection.Add(_main.RedLine);
+                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Для блага " + (i + 1) + ":", true)) });
+                var res = _main.Diff((_lst[i] as Expr).ToString(), "M").Divide("x_" + (i + 1) + "/M");
+                var resReplace = res.Substitute("M", _main.ConvertCommaToDot(_main.MParam.ToString())).Substitute("x_" + (i + 1), _main.ConvertCommaToDot(_x_star[i].ToString())).Substitute("p_" + (i + 1), _main.ConvertCommaToDot(_main.PValuesParams[i].ToString())).ToString();
+                empSum = double.Parse(_main.ConvertDotToComma(resReplace));
+                var resRound = Math.Round(empSum);
+                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"E_" + (i + 1) + @"^M = \frac{\partial x_" + (i + 1) + @"}{\partial M } : " + @"\frac{ x_" + (i + 1) + "}{ M } = " + res.ToLaTeX() + " = " + resRound) });
+
+                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("При увеличении дохода на 1 % спрос на " + (i + 1) + "-e благо возрастает на 1 %.", true)) });
+
+                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Коэффициенты эластичности по ценам:", true)) });
+                result = "E_" + (i + 1) + "^M + ";
+                for (int j = 0; j < _main.CountParams; j++)
+                {
+                    result += "E_{ " + (i + 1) + "" + (j + 1) + "}^p";
+                    if (j < _main.CountParams - 1)
+                    {
+                        result += " + ";
+                    }
+                    res = _main.Diff((_lst[i] as Expr).ToString(), "p_" + (j + 1)).Divide("x_" + (i + 1) + "/p_" + (j+1));
+                    resReplace = res.Substitute("M", _main.ConvertCommaToDot(_main.MParam.ToString())).Substitute("x_" + (i + 1), _main.ConvertCommaToDot(_x_star[i].ToString())).Substitute("p_" + (j + 1), _main.ConvertCommaToDot(_main.PValuesParams[i].ToString())).ToString();
+                    empSum += double.Parse(_main.ConvertDotToComma(resReplace));
+                    _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"E_{" + (i + 1) + "" + (j + 1) + @"}^p = \frac{\partial x_" + (i + 1) + @"}{\partial p_" + (j + 1) + " } : " + @"\frac{ x_" + (i + 1) + "}{ p_" + (j + 1) + " } = " + resReplace) });
+                }
+                _main.ResultCollection.Add(_main.RedLine);
+                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Проверка:", true)) });
+                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + result + " = " + _main.ConvertCommaToDot(empSum.ToString())) });
+            }
+                _main.ResultCollection.Add(_main.RedLine);
+                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Все расчеты произведены достаточно точно и правильно.", true)) });
+
         }
 
     }

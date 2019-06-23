@@ -15,7 +15,7 @@ using MathNet.Symbolics;
 
 namespace ConsumerBehavior.Command
 {
-    class LogariphmicCommand : ICommand
+    class LogariphmicCommand : IUpdate
     {
         public event EventHandler CanExecuteChanged;
 
@@ -36,9 +36,25 @@ namespace ConsumerBehavior.Command
         private string _M = "M";
         private List<object> _lst;
 
+
+        private void TestData()
+        {
+            _main.UParams = "1 * ln(x1) + 2.5 * ln(x2) + 3*ln(x3)";
+            _main.PParams = "p1 = 1; p2 = 4.5; p3 = 2";
+            _main.MParam = 100.0;
+            _main.CountParams = 3;
+        }
+
+        public void UpdateFAQInfo()
+        {
+            TestData();
+            _main.FAQCoeffs = "Пример:\n2.5*ln(x1) + 3*ln(x2) + 4,6*ln(x3)\nИндексы при x должны идти по возрастанию\nЗначения при ln должны быть строго больше 0";
+        }
+
         public LogariphmicCommand(MainWindowViewModel mainWindowViewModel)
         {
             _main = mainWindowViewModel;
+
         }
 
         public bool CanExecute(object parameter)
@@ -49,31 +65,37 @@ namespace ConsumerBehavior.Command
 
         public void Execute(object parameter)
         {
+            
+           
             _pi = _xi = _pi_xi = _minus_pi_xi = _alpha_ln_xi = _L = "";
             _x_star = new double[_main.CountParams];
             _lst = new List<object>();
             var errors = (string)parameter;
-            var pat = @"(\d+(?:[.,]\d+)?)[*]ln[(]x(\d+)[)]";
+            var pat = @"(?:(\d+(?:[.,]\d+)?)[*]ln[(]x(\d+)[)][+]?)+";
             var reg = new Regex(pat, RegexOptions.IgnoreCase);
-            var matchs = reg.Matches(_main.UParams.Replace(" ", ""));
-            if (matchs.Count == _main.CountParams && _main.CountParams > 0)
+            var match = reg.Match(_main.UParams.Replace(" ", ""));
+            
+            if (match.Groups[1].Captures.Count == _main.CountParams && _main.CountParams > 0)
             {
-                _alpha = new double[matchs.Count];
-                _variables = new string[matchs.Count];
-                for (int i = 0; i < matchs.Count; i++)
+
+
+                _alpha = new double[_main.CountParams];
+                _variables = new string[_main.CountParams];
+                for (int i = 0; i < _main.CountParams; i++)
                 {
                     _variables[i] = "x_" + (i + 1);
-                    if (int.Parse(matchs[i].Groups[2].Value) != i + 1)
+                    if (int.Parse(match.Groups[2].Captures[i].Value) != i + 1)
                     {
                         errors += "Неправильный индекс x\n";
                         break;
                     }
-                    _alpha[i] = double.Parse(_main.ConvertDotToComma(matchs[i].Groups[1]));
+                    _alpha[i] = double.Parse(_main.ConvertDotToComma(match.Groups[1].Captures[i]));
                     if (_alpha[i] <= 0)
                     {
                         errors += "Значение альфа не может быть отрицательным и равен 0\n";
                         break;
                     }
+                   
                 }
             }
             else
@@ -102,12 +124,13 @@ namespace ConsumerBehavior.Command
             {
                 if (i == _main.CountParams)
                 {
-                    _alpha_ln_xi += _main.ToDotNumber(_alpha[i - 1]) + "*\\ln(x_" + i + ")";
+
+                    _alpha_ln_xi += _main.ConvertCommaToDot(_alpha[i - 1].ToString()) + "*\\ln(x_" + i + ")";
 
                 }
                 else
                 {
-                    _alpha_ln_xi += _main.ToDotNumber(_alpha[i - 1]) + "*\\ln(x_" + i + ") + ";
+                    _alpha_ln_xi += _main.ConvertCommaToDot(_alpha[i - 1].ToString()) + "*\\ln(x_" + i + ") + ";
 
                 }
 
@@ -471,7 +494,7 @@ namespace ConsumerBehavior.Command
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(p_values + ", M = " + _main.ConvertCommaToDot(_main.MParam.ToString()) + ".") });
 
             var empSum = 0.0;
-            
+
             for (int i = 0; i < _main.CountParams; i++)
             {
                 _main.ResultCollection.Add(_main.RedLine);
@@ -493,7 +516,7 @@ namespace ConsumerBehavior.Command
                     {
                         result += " + ";
                     }
-                    res = _main.Diff((_lst[i] as Expr).ToString(), "p_" + (j + 1)).Divide("x_" + (i + 1) + "/p_" + (j+1));
+                    res = _main.Diff((_lst[i] as Expr).ToString(), "p_" + (j + 1)).Divide("x_" + (i + 1) + "/p_" + (j + 1));
                     resReplace = res.Substitute("M", _main.ConvertCommaToDot(_main.MParam.ToString())).Substitute("x_" + (i + 1), _main.ConvertCommaToDot(_x_star[i].ToString())).Substitute("p_" + (j + 1), _main.ConvertCommaToDot(_main.PValuesParams[i].ToString())).ToString();
                     empSum += double.Parse(_main.ConvertDotToComma(resReplace));
                     _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"E_{" + (i + 1) + "" + (j + 1) + @"}^p = \frac{\partial x_" + (i + 1) + @"}{\partial p_" + (j + 1) + " } : " + @"\frac{ x_" + (i + 1) + "}{ p_" + (j + 1) + " } = " + resReplace) });
@@ -502,8 +525,8 @@ namespace ConsumerBehavior.Command
                 _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Проверка:", true)) });
                 _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + result + " = " + _main.ConvertCommaToDot(empSum.ToString())) });
             }
-                _main.ResultCollection.Add(_main.RedLine);
-                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Все расчеты произведены достаточно точно и правильно.", true)) });
+            _main.ResultCollection.Add(_main.RedLine);
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Все расчеты произведены достаточно точно и правильно.", true)) });
 
         }
 

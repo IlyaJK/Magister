@@ -90,9 +90,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Command\AdditiveCommand.cs" />
+    <Compile Include="Command\IUpdate.cs" />
     <Compile Include="Command\LogariphmicCommand.cs" />
     <Compile Include="Command\MultiplicativeCommand.cs" />
-    <Compile Include="Command\QuadCommand.cs" />
     <Compile Include="Command\RelayCommand.cs" />
     <Compile Include="DisplayRootRegistry.cs" />
     <Compile Include="ViewModels\Function.cs" />

@@ -64,12 +64,12 @@ namespace ConsumerBehavior.ViewModels
         {
             Functions = new ObservableCollection<Function>();
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
-            var names = new string[4] { "Аддитивная", "Логарифмическая", "Квадратичная", "Мультипликативная" };
-            var formulas = new string[4] { @"U(x)=\sum_{j=1}^{n}\alpha_{j}x_{j}^{\beta_{j}}", @"U(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})",
-                @"U(x)=\sum_{j=1}^{n}\alpha_{j}x_{j}+\frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{n}b_{ij}x_{i}x_{j}",@"U(x)=a\prod_{j=1}^{n}x_{j}^{\alpha_{j}}"};
+            var names = new string[3] { "Аддитивная", "Логарифмическая", "Мультипликативная" };
+            var formulas = new string[3] { @"U(x)=\sum_{j=1}^{n}\alpha_{j}x_{j}^{\beta_{j}}", @"U(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})", @"U(x)=a\prod_{j=1}^{n}x_{j}^{\alpha_{j}}"};
             IsVisibleParams = Visibility.Hidden;
-            var funcs = new ICommand[4] { new AdditiveCommand(this), new LogariphmicCommand(this), new QuadCommand(this), new MultiplicativeCommand(this) };
-            for (int i = 0; i < 4; i++)
+           
+            var funcs = new IUpdate[3] { new AdditiveCommand(this), new LogariphmicCommand(this), new MultiplicativeCommand(this) };
+            for (int i = 0; i < 3; i++)
             {
                 Functions.Add(new Function() { Name = names[i], SourceFormula = RenderFormula(formulas[i]), Func = funcs[i] });
             }
@@ -200,7 +200,7 @@ namespace ConsumerBehavior.ViewModels
                     _onSelectionComboBoxFunction = new RelayCommand(param =>
                     {
                         IsVisibleParams = Visibility.Visible;
-
+                        SelectedFunction.Func.UpdateFAQInfo();
                     });
                 }
                 return _onSelectionComboBoxFunction;
@@ -373,7 +373,7 @@ namespace ConsumerBehavior.ViewModels
 
 
 
-        private int _countParams = 2;
+        private int _countParams;
 
         public int CountParams
         {
@@ -386,7 +386,7 @@ namespace ConsumerBehavior.ViewModels
         }
 
 
-        private double _mParam = 100.0;
+        private double _mParam;
 
         public double MParam
         {
@@ -398,7 +398,7 @@ namespace ConsumerBehavior.ViewModels
             }
         }
 
-        private string _uParams = "1 * ln(x1) + 2.5 * ln(x2)";
+        private string _uParams;
 
         public string UParams
         {
@@ -437,7 +437,7 @@ namespace ConsumerBehavior.ViewModels
 
 
 
-        private string _pParams = "p1 = 1; p2 = 4.5";
+        private string _pParams;
 
         public string PParams
         {
@@ -450,8 +450,8 @@ namespace ConsumerBehavior.ViewModels
         }
 
 
-
-        private string _fAQP = "Пример:\np1=1; p2=2.1; p3 = 3,14\nИндексы при p должны идти по возрастанию";
+      
+        private string _fAQP = "Пример:\np1=1; p2=2.1; p3 = 3,14\nИндексы при p должны идти по возрастанию\nЗначения pi должны быть строго больше 0";
 
         public string FAQP
         {
@@ -475,7 +475,7 @@ namespace ConsumerBehavior.ViewModels
 
             }
         }
-
+        
         public string ToDotNumber(double number)
         {
             return number.ToString(System.Globalization.CultureInfo.GetCultureInfo("en-US"));

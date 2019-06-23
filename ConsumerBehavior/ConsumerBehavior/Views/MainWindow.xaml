@@ -69,11 +69,11 @@
         <TextBlock Text="Введите коэф-ты" Grid.Row="2" Visibility="{Binding IsVisibleParams}" Margin="55,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" />
         <TextBox Text="{Binding UParams}" TabIndex="3" Visibility="{Binding IsVisibleParams}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" />
         <Button Content="?" TabIndex="5" Command="{Binding OnClickFaqCoeffs}" Visibility="{Binding IsVisibleParams}" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="2" Width="20" MaxWidth="20" Height="20" MaxHeight="20" Margin="30 0 0 0"/>
-        <TextBlock Text="{Binding FAQCoeffs}" Visibility="{Binding IsVisibleFAQCoeffs, FallbackValue=Hidden}" TextWrapping="Wrap"  Width="200" Height="50" Margin="50,-70,0,0" Background="Gray" Grid.Row="2"/>
+        <TextBlock Text="{Binding FAQCoeffs}" Visibility="{Binding IsVisibleFAQCoeffs, FallbackValue=Hidden}" TextWrapping="Wrap"  Width="200" Height="130" Margin="-38,-150,0,0" Background="LightGray" Grid.Row="2" Grid.ColumnSpan="2"/>
         <TextBlock Text="Введите значения p" Grid.Row="2" Visibility="{Binding IsVisibleParams}" Margin="40 0 0 0" Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" />
         <TextBox Text="{Binding PParams}" TabIndex="4" Grid.Row="2" Visibility="{Binding IsVisibleParams}"  Grid.Column="3" VerticalAlignment="Center" />
         <Button Content="?" TabIndex="6" Command="{Binding OnClickFAQP}" Visibility="{Binding IsVisibleParams}" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" Width="20" MaxWidth="20" Height="20" MaxHeight="20" Margin="20 0 0 0"/>
-        <TextBlock Text="{Binding FAQP}" Visibility="{Binding IsVisibleFAQP, FallbackValue=Hidden}" TextWrapping="Wrap"  Width="200" Height="50" Margin="40,-70,0,0" Background="Gray" Grid.Row="2" Grid.Column="2"/>
+        <TextBlock Text="{Binding FAQP}" Visibility="{Binding IsVisibleFAQP, FallbackValue=Hidden}" TextWrapping="Wrap"  Width="259" Height="70" Margin="2,-90,0,0" Background="LightGray" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2"/>
         <Button Command="{Binding OnClickSolve}" TabIndex="7" Height="32" Visibility="{Binding IsVisibleParams}" Grid.Column="4" Grid.Row="2" Content="Решить" Width="100"/>
         <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="3" Grid.RowSpan="5" Grid.ColumnSpan="5" Visibility="{Binding IsVisibleParams}" HorizontalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding ResultCollection, Mode=OneWay}" >

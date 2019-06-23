@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsumerBehavior.Command;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,8 @@ namespace ConsumerBehavior.ViewModels
     class Function : BasicViewModel
     {
         public string Name { get; set; }
-        public BitmapSource SourceFormula { get; set; }
-        public ICommand Func { get; set; }
+        public BitmapSource SourceFormula { get; set; }       
+        public IUpdate Func { get; set; }
      
 
     }

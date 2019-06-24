@@ -86,7 +86,7 @@ namespace ConsumerBehavior.ViewModels
             switch (coeff.Length)
             {
                 case 1: return ExprLast.Zero.Equals(coeff[0]) ? variable : ExprLast.Undefined;
-                case 2: return Rational.Simplify(variable, Algebraic.Expand(-coeff[0] / coeff[1]));
+                case 2: return Rational.Simplify(variable, Algebraic.Expand(-coeff[0] / coeff[1]));               
                 default: return ExprLast.Undefined;
             }
         }

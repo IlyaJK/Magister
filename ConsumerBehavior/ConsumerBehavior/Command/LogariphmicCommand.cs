@@ -518,10 +518,34 @@ namespace ConsumerBehavior.Command
                     }
                     res = _main.Diff((_lst[i] as Expr).ToString(), "p_" + (j + 1)).Divide("x_" + (i + 1) + "/p_" + (j + 1));
                     resReplace = res.Substitute("M", _main.ConvertCommaToDot(_main.MParam.ToString())).Substitute("x_" + (i + 1), _main.ConvertCommaToDot(_x_star[i].ToString())).Substitute("p_" + (j + 1), _main.ConvertCommaToDot(_main.PValuesParams[i].ToString())).ToString();
-                    empSum += double.Parse(_main.ConvertDotToComma(resReplace));
+                    var epi = double.Parse(_main.ConvertDotToComma(resReplace));
+                    empSum += epi;
                     _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"E_{" + (i + 1) + "" + (j + 1) + @"}^p = \frac{\partial x_" + (i + 1) + @"}{\partial p_" + (j + 1) + " } : " + @"\frac{ x_" + (i + 1) + "}{ p_" + (j + 1) + " } = " + resReplace) });
+                    
+                    var output = "При росте цены на " + (j + 1) + "-е благо на 1 %";
+
+                    if (epi != 0)
+                    {
+                        if (epi < 0)
+                        {
+                            output += " спрос на него уменьшается на ";
+                        }
+                        else
+                        {
+                            output += "спрос на него увеличивается на ";
+                        }
+                        _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText(output, true) + _main.ConvertCommaToDot(Math.Abs(epi).ToString()) + _main.SetText("%.")) });
+
+                    }
+                    else
+                    {
+                        output += " оно является независимым.";
+                        _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText(output, true)) });
+                    }
+                    _main.ResultCollection.Add(_main.RedLine);
+
                 }
-                _main.ResultCollection.Add(_main.RedLine);
+                
                 _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Проверка:", true)) });
                 _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + result + " = " + _main.ConvertCommaToDot(empSum.ToString())) });
             }

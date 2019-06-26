@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
+
 using System.Windows.Input;
-//using ConsumerBehavior.Models;
 using ConsumerBehavior.Command;
 using WpfMath;
 using System.Windows.Media.Imaging;
@@ -11,11 +11,16 @@ using System.Text.RegularExpressions;
 using MathNet.Symbolics;
 using Expr = MathNet.Symbolics.SymbolicExpression;
 using ExprLast = MathNet.Symbolics.Expression;
+using System.Windows.Controls;
+using System.Reflection;
+using System.IO;
 
 namespace ConsumerBehavior.ViewModels
 {
     class MainWindowViewModel : BasicViewModel
     {
+
+        private WebBrowser _browser;
 
         private ObservableCollection<Function> _functions;
 
@@ -62,18 +67,28 @@ namespace ConsumerBehavior.ViewModels
 
         public MainWindowViewModel()
         {
+
+
             Functions = new ObservableCollection<Function>();
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
             var names = new string[3] { "Аддитивная", "Логарифмическая", "Мультипликативная" };
-            var formulas = new string[3] { @"U(x)=\sum_{j=1}^{n}\alpha_{j}x_{j}^{\beta_{j}}", @"U(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})", @"U(x)=a\prod_{j=1}^{n}x_{j}^{\alpha_{j}}"};
+            var formulas = new string[3] { @"U(x)=\sum_{j=1}^{n}\alpha_{j}x_{j}^{\beta_{j}}", @"U(x)=\sum_{j=1}^{n}\alpha_{j}ln(x_{j})", @"U(x)=a\prod_{j=1}^{n}x_{j}^{\alpha_{j}}" };
             IsVisibleParams = Visibility.Hidden;
-           
+
             var funcs = new IUpdate[3] { new AdditiveCommand(this), new LogariphmicCommand(this), new MultiplicativeCommand(this) };
             for (int i = 0; i < 3; i++)
             {
                 Functions.Add(new Function() { Name = names[i], SourceFormula = RenderFormula(formulas[i]), Func = funcs[i] });
             }
             RedLine = new Result() { ItemResult = RenderFormula(SetText("абзац")), TopPadding = Visibility.Hidden };
+
+
+        }
+
+        public string SolveEq(string expr, string var)
+        {
+
+            return _browser.InvokeScript("solve_eq", new object[2] { expr, var }).ToString().Replace("list[", "").Replace("]", "");
         }
 
         public Expr FindRoot(ExprLast variable, ExprLast expr)
@@ -86,7 +101,7 @@ namespace ConsumerBehavior.ViewModels
             switch (coeff.Length)
             {
                 case 1: return ExprLast.Zero.Equals(coeff[0]) ? variable : ExprLast.Undefined;
-                case 2: return Rational.Simplify(variable, Algebraic.Expand(-coeff[0] / coeff[1]));               
+                case 2: return Rational.Simplify(variable, Algebraic.Expand(-coeff[0] / coeff[1]));
                 default: return ExprLast.Undefined;
             }
         }
@@ -104,7 +119,7 @@ namespace ConsumerBehavior.ViewModels
         public Expr Diff(string expr, string var)
         {
             return Expr.Parse(expr).Differentiate(Expr.Parse(var));
-           
+
         }
 
         public string ReplaceVariablesToLatex(string input, string[] variables)
@@ -298,22 +313,77 @@ namespace ConsumerBehavior.ViewModels
             }
         }
 
-        //private ICommand _onLoad;
+        private ICommand _onLoad;
 
-        //public ICommand OnLoad
-        //{
-        //    get
-        //    {
-        //        if (_onLoad == null)
-        //        {
-        //            _onLoad =  new RelayCommand(param =>
-        //            {
+        public ICommand OnLoad
+        {
+            get
+            {
+                if (_onLoad == null)
+                {
+                    _onLoad = new RelayCommand(param =>
+                   {
+                       _browser = (WebBrowser)param;
+                       var curPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                       var html = "<!DOCTYPE html>" +
+                         "<html lang=\"ru\">" +
+                         "<head>" +
+                         "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />" +
+                         "<meta http-equiv='X-UA-Compatible' content='IE=edge' />" +
+                         "<meta name='viewport' content='width=device-width, initial-scale=1'>" +
+                         "<script type='text/x-mathjax-config'>" +
+                         "MathJax.Hub.Config({" +
+                         "tex2jax: {inlineMath: [[\"$\",\"$\"],[\"\\\\(\",\"\\\\)\"]]}});" +
+                         "</script>" +
+                         "<script type='text/javascript' src='" + "file:///" + curPath + "\\Libs\\unpacked\\MathJax.js" + "?config=TeX-MML-AM_CHTML'></script>" +
+                         "</head>" +
+                         "<body>" +
+                         "<div id='output'></div>" +
+                         "<script  src='" + "file:///" + curPath + "./Libs/giac.js" + "'></script>" +
+                         "<script  type='text/javascript'>" +
+                         "giaceval = Module.cwrap('caseval', 'string', ['string']);" +
+                         "var UI = {" +
+                         "latexeval : function(input){" +
+                         "var expr = giaceval(input);" +
+                        "return expr;" +
+                         "}" +
+                         "};" +
+                         "function print(text) {" +
+                         "document.getElementById('output').innerHTML += '<div>'+text+'</div>';" +
+                         "}" +
+                         "function solve_eq(e, v) {" +
+                         "return UI.latexeval('solve(' + e +'=0, ' + v +')');" +
+                         "}" +
+                         "</script>" +
+                          "</body>" +
+                         "</html>";
 
-        //            });
-        //        }
-        //        return _onLoad;
-        //    }
-        //}
+                       _browser.NavigateToString(html);
+
+                   });
+                }
+                return _onLoad;
+            }
+        }
+
+        private ICommand _loadCompletedBrowser;
+
+        public ICommand LoadCompletedBrowser
+        {
+            get
+            {
+                if (_loadCompletedBrowser == null)
+                {
+                    _loadCompletedBrowser = new RelayCommand(param =>
+                    {
+                        (param as Button).IsEnabled = true;
+                        //var res = _browser.InvokeScript("solve_eq", new object[2] { "b*a - x^(-0.9)", "x" });
+
+                    });
+                }
+                return _loadCompletedBrowser;
+            }
+        }
 
         #endregion
 
@@ -450,7 +520,7 @@ namespace ConsumerBehavior.ViewModels
         }
 
 
-      
+
         private string _fAQP = "Пример:\np1=1; p2=2.1; p3 = 3,14\nИндексы при p должны идти по возрастанию\nЗначения pi должны быть строго больше 0";
 
         public string FAQP
@@ -475,11 +545,8 @@ namespace ConsumerBehavior.ViewModels
 
             }
         }
-        
-        public string ToDotNumber(double number)
-        {
-            return number.ToString(System.Globalization.CultureInfo.GetCultureInfo("en-US"));
-        }
+
+
 
     }
 

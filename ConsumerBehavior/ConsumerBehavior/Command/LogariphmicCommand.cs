@@ -39,10 +39,10 @@ namespace ConsumerBehavior.Command
 
         private void TestData()
         {
-            _main.UParams = "1 * ln(x1) + 2.5 * ln(x2) + 3*ln(x3)";
-            _main.PParams = "p1 = 1; p2 = 4.5; p3 = 2";
-            _main.MParam = 100.0;
-            _main.CountParams = 3;
+            _main.UParams = "1 * ln(x1) +1 * ln(x2)";
+            _main.PParams = "p1 = 10; p2 = 2";
+            _main.MParam = 360.0;
+            _main.CountParams = 2;
         }
 
         public void UpdateFAQInfo()
@@ -135,7 +135,7 @@ namespace ConsumerBehavior.Command
                 }
 
 
-                p_values += "p_" + i + " = " + _main.ToDotNumber(_main.PValuesParams[i - 1]);
+                p_values += "p_" + i + " = " + _main.ConvertCommaToDot(_main.PValuesParams[i - 1]);
                 _pi += "p_" + i;
                 if (i < _main.CountParams)
                 {
@@ -217,7 +217,7 @@ namespace ConsumerBehavior.Command
                 _lst.Add(_main.Diff(_L.Replace("\\", ""), _variables[i]));
                 _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"\frac{\partial L}{\partial x_" + (i + 1) + "} = " + (_lst[i] as Expr).ToLaTeX().Replace(_lambda, @"\lambda") + " = 0") });
             }
-
+            
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"\frac{\partial L}{\partial \lambda } = " + _M + _minus_pi_xi + " = 0") });
             _main.ResultCollection.Add(_main.RedLine);
             for (int i = 0; i < _lst.Count; i++)
@@ -246,9 +246,10 @@ namespace ConsumerBehavior.Command
             }
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + Expr.Parse(result).ToLaTeX().Replace(_lambda, @"\" + _lambda) + " = " + _M) });
 
+                
             result += "-" + _M;
             var lam_star = _main.FindRoot(ExprLast.Symbol(_lambda), Infix.ParseOrThrow(result));
-            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"\lambda^* = " + lam_star.ToLaTeX()) });
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"\lambda^* = " + lam_star.ToLaTeX() + " = " + lam_star.Substitute("M", _main.MParam).ToLaTeX()) });
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + _main.SetText(@"Найдем оптимальный набор благ потребителя.")) });
             result = @"X^* = (";
 
@@ -274,7 +275,7 @@ namespace ConsumerBehavior.Command
             _main.ResultCollection.Add(_main.RedLine);
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + p_values + ", M = " + _main.ConvertCommaToDot(_main.MParam)) });
             _main.ResultCollection.Add(_main.RedLine);
-
+            
             for (int i = 0; i < _main.CountParams; i++)
             {
                 var res = (_lst[i] as Expr).Substitute(Expr.Parse(_M), Expr.Parse(_main.ConvertCommaToDot(_main.MParam))).Substitute(Expr.Parse("p_" + (i + 1)), Expr.Parse(_main.ConvertCommaToDot(_main.PValuesParams[i])));
@@ -400,24 +401,42 @@ namespace ConsumerBehavior.Command
             }
 
 
-            // Дописать выводы
+           
             for (int i = 0; i < _main.CountParams; i++)
             {
                 _main.ResultCollection.Add(_main.RedLine);
-                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Определим реакции потребителя при изменении цены на " + (i + 1) + "-е благо:", true)) });
+                _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Определим реакции потребителя     при изменении цены на " + (i + 1) + "-е благо:", true)) });
                 for (int j = 0; j < _main.CountParams; j++)
                 {
+                    
                     _main.ResultCollection.Add(_main.RedLine);
                     var res = _main.Diff((_lst[i] as Expr).ToString(), "p_" + (i + 1));
                     var m = Expr.Parse(_main.ConvertCommaToDot(_main.MParam.ToString()));
                     var p = Expr.Parse(_main.ConvertCommaToDot(_main.PValuesParams[j].ToString()));
                     var val = double.Parse(_main.ConvertDotToComma(res.Substitute(Expr.Parse("M"), m).Substitute(Expr.Parse("p_" + (i + 1)), p).RealNumberValue.ToString()));
                     _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("", true) + @"\frac{\partial x_" + (j + 1) + @"}{\partial p_" + (i + 1) + " } = " + res.ToLaTeX() + (val == 0 ? "=" : @"\approx") + _main.ConvertCommaToDot(val.ToString()) + (val != 0 ? " (" + (val >= 0 ? ">" : "<") + "0)" : "")) });
+                    if (i == j && val < 0)
+                    {
+                        _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("С увеличением цены на " + (i + 1) + "-е благо спрос на него уменьшается, значит, "+ (j+1)+"-е благо нормальное.", true)) });
+                    }
+                    else if (i == j && val > 0)
+                    {
+                        _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("С увеличением цены на " + (i + 1) + "-е благо спрос на него уменьшается, значит, " + (j + 1) + "-е благо ненормальное.", true)) });
+                    }
+                    else if (val < 0)
+                    {
+                        _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("С увеличением  цены на " + (i + 1) + "-е благо спрос на " + (j + 1) + "-е благо увеличивается, эти блага взаимодополняемые.", true)) });
+                    }
+                    else if (val > 0)
+                    {
+                        _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("С увеличением  цены на " + (i + 1) + "-е благо спрос на " + (j + 1) + "-е благо увеличивается, эти блага взаимозаменяемые.", true)) });
+                    }
+                   
                 }
 
             }
 
-            // asd
+           
             result = @"\overline{ X}^ * = (";
 
             for (int i = 0; i < _main.CountParams; i++)

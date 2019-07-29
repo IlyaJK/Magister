@@ -2,12 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Collections.ObjectModel;
 using Expr = MathNet.Symbolics.SymbolicExpression;
 using ExprLast = MathNet.Symbolics.Expression;
 using MathNet.Symbolics;
@@ -118,18 +114,22 @@ namespace ConsumerBehavior.Command
         private void Algorithm()
         {
             _main.Header();
-            var result = "U = ";
+            var result = "U(";
             var p_values = "";
+            var xi = "";
             for (int i = 1; i <= _main.CountParams; i++)
             {
+               
+
                 if (i == _main.CountParams)
                 {
-
+                    xi += "x_" + i;
                     _alpha_ln_xi += _main.ConvertCommaToDot(_alpha[i - 1].ToString()) + "*\\ln(x_" + i + ")";
 
                 }
                 else
                 {
+                    xi += "x_" + i + ",";
                     _alpha_ln_xi += _main.ConvertCommaToDot(_alpha[i - 1].ToString()) + "*\\ln(x_" + i + ") + ";
 
                 }
@@ -145,7 +145,7 @@ namespace ConsumerBehavior.Command
             }
 
             _main.ResultCollection.Add(_main.RedLine);
-            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(result + _alpha_ln_xi), Align = HorizontalAlignment.Center });
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(result + xi + ")=" + _alpha_ln_xi), Align = HorizontalAlignment.Center });
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(p_values), Align = HorizontalAlignment.Center });
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Решение:", true)) });
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("1. Решим задачу оптимального поведения потребителя, если цены благ соответственно равны ", true)) });
@@ -182,7 +182,7 @@ namespace ConsumerBehavior.Command
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(result + _xi + _main.SetText(" - количество приобретаемого блага " + blag + " вида.")) });
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Для этого решим следующую задачу оптимального поведения потребителя.", true)) });
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("Математическая модель задачи имеет вид:")) });
-            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula("x_j \\geq 0, j = 1, " + _main.CountParams + _main.SetText("           (1)")), Align = HorizontalAlignment.Center });
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(@"\alpha_j > 0, x_j > 0, j = \overline{1, " + _main.CountParams +"}" + _main.SetText("           (1)")), Align = HorizontalAlignment.Center });
 
 
             for (int i = 1; i <= _main.CountParams; i++)
@@ -458,7 +458,7 @@ namespace ConsumerBehavior.Command
             _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(_main.SetText("функции полезности ") + "U = (" + _xi + ")" + _main.SetText(" по соответствующим аргументам в точке ") + @"\overline{ X}^*.") });
 
             _main.ResultCollection.Add(_main.RedLine);
-            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(@"\overline{ X}^ * = (" + _x_star.Aggregate("", (b, n) => b + (!string.IsNullOrEmpty(b) ? ";" : "") + _main.ConvertCommaToDot(n.ToString())) + ")"), Align = HorizontalAlignment.Center });
+            _main.ResultCollection.Add(new Result() { ItemResult = _main.RenderFormula(@"\overline{ X}^ * = (" + _x_star.Aggregate("", (b, n) => b + (!string.IsNullOrEmpty(b) ? ";" : "") + _main.ConvertCommaToDot(n.ToString())) + ")") });
 
             var dU_x_star = new double[_main.CountParams];
             for (int i = 0; i < _main.CountParams; i++)
@@ -471,8 +471,8 @@ namespace ConsumerBehavior.Command
                 _main.ResultCollection.Add(new Result()
                 {
                     ItemResult = _main.RenderFormula(_main.SetText("", true) + @"\frac{\partial U}{\partial x_" + (i + 1) + " } = " + res.ToLaTeX() + _main.SetText(";    ") +
-                    @"\frac{\partial U}{\partial x_" + (i + 1) + " }(\\overline{ X})^* = " + res.ToLaTeX() + _main.SetText(" = ") + _main.ConvertCommaToDot(val.ToString())),
-                    Align = HorizontalAlignment.Center
+                    @"\frac{\partial U}{\partial x_" + (i + 1) + " }(\\overline{ X})^* = " + res.ToLaTeX() + _main.SetText(" = ") + _main.ConvertCommaToDot(val.ToString()))
+                    
                 });
             }
 

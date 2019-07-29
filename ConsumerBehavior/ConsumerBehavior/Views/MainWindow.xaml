@@ -7,7 +7,7 @@
         xmlns:controls="clr-namespace:WpfMath.Controls;assembly=WpfMath"
         xmlns:local="clr-namespace:ConsumerBehavior"
         mc:Ignorable="d"
-        Title="MainWindow" Height="650" Width="850" ResizeMode="CanMinimize">
+        Title="Программа" Height="650" Width="850" ResizeMode="CanMinimize">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction  Command="{Binding OnLoad}" CommandParameter="{Binding ElementName=Browser}"/>
